@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class BlogModel extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'title',
+        'Author',
+        'Description',
+        'Date',
+    ];
 }
