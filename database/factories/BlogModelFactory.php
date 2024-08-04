@@ -16,6 +16,7 @@ class BlogModelFactory extends Factory
             'Author' => $this->faker->name,
             'Description' => $this->faker->paragraph,
             'Date' => $this->faker->date,
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }

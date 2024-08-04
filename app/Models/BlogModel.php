@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class BlogModel extends Model
 {
@@ -13,5 +13,15 @@ class BlogModel extends Model
         'Author',
         'Description',
         'Date',
+        'user_id'
     ];
+
+    protected static function booted()
+    {
+        static::creating(function (BlogModel $blogModel) {
+            if (auth()->check()) {
+                $blogModel->user_id = auth()->id();
+            }
+        });
+    }
 }

@@ -12,3 +12,7 @@ Route::put('/{id}/update', [BlogController::class, 'update'])->name('posts.updat
 Route::delete('/{id}/destroy', [BlogController::class, 'destroy'])->name('posts.destroy');
 
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
