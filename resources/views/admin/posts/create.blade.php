@@ -1,4 +1,5 @@
-@extends('layouts.app')
+<!-- resources/views/admin/posts/form.blade.php -->
+@extends('admin')
 
 @section('title', isset($post) ? 'Edit Blog Post' : 'Create Blog Post')
 
@@ -6,7 +7,8 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">{{ isset($post) ? 'Edit Blog Post' : 'Create Blog Post' }}</h2>
-    <form action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST">
+    <form action="{{ isset($post) ? route('admin.posts.update', $post->id) : route('admin.posts.store') }}"
+        method="POST">
         @csrf
 
         @if (isset($post))
@@ -22,19 +24,19 @@
         <div class="form-group">
             <label for="author">Author</label>
             <input type="text" class="form-control" id="author" name="author"
-                value="{{ old('author', isset($post) ? $post->Author : '') }}" required>
+                value="{{ old('author', isset($post) ? $post->author : '') }}" required>
         </div>
 
         <div class="form-group">
             <label for="description">Description</label>
             <textarea class="form-control" id="description" name="description" rows="4"
-                required>{{ old('description', isset($post) ? $post->Description : '') }}</textarea>
+                required>{{ old('description', isset($post) ? $post->description : '') }}</textarea>
         </div>
 
         <div class="form-group">
             <label for="date">Date</label>
             <input type="date" class="form-control" id="date" name="date"
-                value="{{ old('date', isset($post) ? $post->Date : '') }}" required>
+                value="{{ old('date', isset($post) ? $post->date->format('Y-m-d') : '') }}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">{{ isset($post) ? 'Update Post' : 'Create Post' }}</button>

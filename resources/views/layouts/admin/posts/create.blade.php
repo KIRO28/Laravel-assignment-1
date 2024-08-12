@@ -6,7 +6,8 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">{{ isset($post) ? 'Edit Blog Post' : 'Create Blog Post' }}</h2>
-    <form action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST">
+    <form action="{{ isset($post) ? route('admin.posts.update', $post->id) : route('admin.posts.store') }}"
+        method="POST">
         @csrf
 
         @if (isset($post))
