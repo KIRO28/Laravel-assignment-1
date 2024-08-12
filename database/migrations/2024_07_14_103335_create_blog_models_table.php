@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('Author');
-            $table->string('Description');
+            $table->text('Description');
             $table->date('Date');
             $table->timestamps();
         });
