@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\BlogModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -26,13 +27,14 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new blog post.
+     * Show the form for creating a new blog post or editing an existing one.
      *
+     * @param  \App\Models\BlogModel|null  $post
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function create()
+    public function create(BlogModel $post = null)
     {
-        return view('layouts.admin.posts.create'); // Return the view to create a new blog post
+        return view('layouts.admin.posts.create', compact('post')); // Return the view to create or edit a blog post
     }
 
     /**
@@ -50,20 +52,22 @@ class PostController extends Controller
             'date' => 'required|date',
         ]);
 
-        BlogModel::create($request->all()); // Create a new blog post
-        return redirect()->route('layouts.admin.posts.index')->with('success', 'Blog post created successfully.');
+        BlogModel::create([
+            'title' => $request->title,
+            'Author' => $request->author,
+            'Description' => $request->description,
+            'Date' => $request->date,
+            'user_id' => Auth::id(), // Associate the post with the currently authenticated user
+        ]);
+        return redirect()->route('admin.posts.index')->with('success', 'Blog post created successfully.');
     }
 
-    /**
-     * Show the form for editing the specified blog post.
-     *
-     * @param  \App\Models\BlogModel  $post
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function edit(BlogModel $post)
+    public function edit($id)
     {
-        return view('layouts.admin.posts.edit', compact('post')); // Return the view to edit a blog post
+        $post = BlogModel::findOrFail($id); // Find the blog post by ID or fail if not found
+        return view('layouts.admin.posts.create', compact('post')); // Return the view for editing, passing the post data
     }
+
 
     /**
      * Update the specified blog post in storage.
@@ -81,8 +85,13 @@ class PostController extends Controller
             'date' => 'required|date',
         ]);
 
-        $post->update($request->all()); // Update the blog post
-        return redirect()->route('layouts.admin.posts.index')->with('success', 'Blog post updated successfully.');
+        $post->update([
+            'title' => $request->title,
+            'Author' => $request->author,
+            'Description' => $request->description,
+            'Date' => $request->date,
+        ]);
+        return redirect()->route('admin.posts.index')->with('success', 'Blog post updated successfully.');
     }
 
     /**
@@ -94,6 +103,6 @@ class PostController extends Controller
     public function destroy(BlogModel $post)
     {
         $post->delete(); // Delete the blog post
-        return redirect()->route('layouts.admin.posts.index')->with('success', 'Blog post deleted successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Blog post deleted successfully.');
     }
 }

@@ -6,42 +6,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // Ensure only admins can access these routes
     public function __construct()
     {
         $this->middleware('admin');
     }
 
-    /**
-     * Display a listing of the users.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        $users = User::all(); // Fetch all users
-        return view('layouts.admin.users.index', compact('users')); // Pass users to the index view
+        $users = User::all();
+        return view('layouts.admin.users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function create()
+    public function create(User $user = null)
     {
-        return view('layouts.admin.users.create'); // Return the view to create a new user
+        return view('layouts.admin.users.create', compact('user'));
     }
 
-    /**
-     * Store a newly created user in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -51,41 +35,29 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'role' => $request->input('role'),
-            'password' => Hash::make($request->input('password')),
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('layouts.admin.users.index')->with('success', 'User created successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
-    /**
-     * Show the form for editing the specified user.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function edit(User $user)
+    public function edit($id)
     {
-        return view('layouts.admin.users.edit', compact('user')); // Return the view to edit a user
+        $user = User::findOrFail($id);
+        return view('layouts.admin.users.create', compact('user'));
     }
 
-    /**
-     * Update the specified user in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255',
             'role' => 'required|string|in:admin,author,user',
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user->name = $request->input('name');
@@ -96,19 +68,16 @@ class UserController extends Controller
             $user->password = Hash::make($request->input('password'));
         }
 
-        $user->save(); // Update the user
-        return redirect()->route('layouts.admin.users.index')->with('success', 'User updated successfully.');
+        $user->save(); // Save the updated user
+
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
-    /**
-     * Remove the specified user from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function destroy(User $user)
     {
-        $user->delete(); // Delete the user
-        return redirect()->route('layouts.admin.users.index')->with('success', 'User deleted successfully.');
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 }
+
+

@@ -46,6 +46,6 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard'); // Route for admin dashboard
         }
 
-        return redirect()->route('home'); // Route for non-admin users
+        return redirect()->route('posts.index'); // Route for non-admin users
     }
 }

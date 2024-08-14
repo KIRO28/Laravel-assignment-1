@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,6 +11,10 @@ class BlogController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
         if ($user->isAdmin()) {
             $posts = BlogModel::all(); // Admin can see all posts
@@ -38,6 +41,10 @@ class BlogController extends Controller
             'date' => 'required|date',
         ]);
 
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to create a post.');
+        }
+
         BlogModel::create([
             'title' => $request->title,
             'Author' => $request->author,
@@ -55,7 +62,7 @@ class BlogController extends Controller
         $post = BlogModel::findOrFail($id);
 
         // Ensure that only the owner or an admin can edit the post
-        if (Auth::user()->id !== $post->user_id && !Auth::user()->isAdmin()) {
+        if (!Auth::check() || (Auth::user()->id !== $post->user_id && !Auth::user()->isAdmin())) {
             return redirect()->route('posts.index')->with('error', 'You do not have permission to edit this post.');
         }
 
@@ -75,7 +82,7 @@ class BlogController extends Controller
         $post = BlogModel::findOrFail($id);
 
         // Ensure that only the owner or an admin can update the post
-        if (Auth::user()->id !== $post->user_id && !Auth::user()->isAdmin()) {
+        if (!Auth::check() || (Auth::user()->id !== $post->user_id && !Auth::user()->isAdmin())) {
             return redirect()->route('posts.index')->with('error', 'You do not have permission to update this post.');
         }
 
@@ -95,7 +102,7 @@ class BlogController extends Controller
         $post = BlogModel::findOrFail($id);
 
         // Ensure that only the owner or an admin can delete the post
-        if (Auth::user()->id !== $post->user_id && !Auth::user()->isAdmin()) {
+        if (!Auth::check() || (Auth::user()->id !== $post->user_id && !Auth::user()->isAdmin())) {
             return redirect()->route('posts.index')->with('error', 'You do not have permission to delete this post.');
         }
 

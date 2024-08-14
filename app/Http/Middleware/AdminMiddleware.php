@@ -16,12 +16,16 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
+        // Check if the user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to access this page.');
+        }
 
-        if ($user->role === 'admin') {
+        // Check if the authenticated user is an admin
+        if (Auth::user()->isAdmin()) {
             return $next($request);
         }
 
-        return redirect('/'); // Or any other route for non-admin users
+        return redirect()->route('posts.index')->with('error', 'You do not have permission to access admin.');
     }
 }

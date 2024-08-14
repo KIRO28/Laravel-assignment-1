@@ -10,7 +10,6 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Title</th>
                 <th>Author</th>
                 <th>Description</th>
@@ -21,7 +20,6 @@
         <tbody>
             @foreach ($posts as $post)
                 <tr>
-                    <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->Author }}</td>
                     <td>{{ $post->Description }}</td>
