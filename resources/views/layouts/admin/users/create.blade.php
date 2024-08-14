@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
 
 @section('title', isset($user) ? 'Edit User' : 'Create User')
 

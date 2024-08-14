@@ -23,7 +23,42 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all(); // Fetch all users
-        return view('admin.users.index', compact('users')); // Pass users to the index view
+        return view('layouts.admin.users.index', compact('users')); // Pass users to the index view
+    }
+
+    /**
+     * Show the form for creating a new user.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function create()
+    {
+        return view('layouts.admin.users.create'); // Return the view to create a new user
+    }
+
+    /**
+     * Store a newly created user in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'role' => 'required|string|in:admin,author,user',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'role' => $request->input('role'),
+            'password' => Hash::make($request->input('password')),
+        ]);
+
+        return redirect()->route('layouts.admin.users.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -34,7 +69,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user')); // Return the view to edit a user
+        return view('layouts.admin.users.edit', compact('user')); // Return the view to edit a user
     }
 
     /**
@@ -62,6 +97,18 @@ class UserController extends Controller
         }
 
         $user->save(); // Update the user
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('layouts.admin.users.index')->with('success', 'User updated successfully.');
+    }
+
+    /**
+     * Remove the specified user from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(User $user)
+    {
+        $user->delete(); // Delete the user
+        return redirect()->route('layouts.admin.users.index')->with('success', 'User deleted successfully.');
     }
 }

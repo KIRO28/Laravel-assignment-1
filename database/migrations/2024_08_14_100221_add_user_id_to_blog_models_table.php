@@ -11,8 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('blog_models', function (Blueprint $table) {
-            //
-            $table->text('Description')->change();
+            $table->unsignedBigInteger('user_id')->nullable(); // Add the user_id column
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Add foreign key constraint
         });
     }
 
@@ -22,8 +22,8 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('blog_models', function (Blueprint $table) {
-            //
-            $table->text('Description')->change();
+            $table->dropForeign(['user_id']); // Drop the foreign key constraint
+            $table->dropColumn('user_id'); // Drop the user_id column
         });
     }
 };

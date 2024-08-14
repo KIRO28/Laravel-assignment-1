@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\BlogModel;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 
 class PostController extends Controller
 {
@@ -24,7 +22,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = BlogModel::all(); // Fetch all blog posts
-        return view('admin.posts.index', compact('posts')); // Pass posts to the index view
+        return view('layouts.admin.posts.index', compact('posts')); // Pass posts to the index view
     }
 
     /**
@@ -34,7 +32,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create'); // Return the view to create a new blog post
+        return view('layouts.admin.posts.create'); // Return the view to create a new blog post
     }
 
     /**
@@ -47,13 +45,13 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'Author' => 'required|string|max:255',
-            'Description' => 'required|string',
-            'Date' => 'required|date',
+            'author' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         BlogModel::create($request->all()); // Create a new blog post
-        return redirect()->route('admin.posts.index')->with('success', 'Blog post created successfully.');
+        return redirect()->route('layouts.admin.posts.index')->with('success', 'Blog post created successfully.');
     }
 
     /**
@@ -64,7 +62,7 @@ class PostController extends Controller
      */
     public function edit(BlogModel $post)
     {
-        return view('admin.posts.edit', compact('post')); // Return the view to edit a blog post
+        return view('layouts.admin.posts.edit', compact('post')); // Return the view to edit a blog post
     }
 
     /**
@@ -78,13 +76,13 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'Author' => 'required|string|max:255',
-            'Description' => 'required|string',
-            'Date' => 'required|date',
+            'author' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $post->update($request->all()); // Update the blog post
-        return redirect()->route('admin.posts.index')->with('success', 'Blog post updated successfully.');
+        return redirect()->route('layouts.admin.posts.index')->with('success', 'Blog post updated successfully.');
     }
 
     /**
@@ -96,7 +94,6 @@ class PostController extends Controller
     public function destroy(BlogModel $post)
     {
         $post->delete(); // Delete the blog post
-        return redirect()->route('admin.posts.index')->with('success', 'Blog post deleted successfully.');
+        return redirect()->route('layouts.admin.posts.index')->with('success', 'Blog post deleted successfully.');
     }
-
 }

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', isset($post) ? 'Edit Blog Post' : 'Create Blog Post')
 
