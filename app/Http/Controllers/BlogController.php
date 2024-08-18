@@ -12,14 +12,22 @@ class BlogController extends Controller
     {
         $user = Auth::user();
 
+        // If the user is not authenticated, redirect to the login page
         if (!$user) {
             return redirect()->route('login');
         }
 
+        // If the user is an admin, redirect back
         if ($user->isAdmin()) {
-            $posts = BlogModel::all(); // Admin can see all posts
-        } else {
+            return redirect()->route('admin.dashboard')->with('error', 'Admins are not allowed to view user or author page.');
+        }
+
+        // If the user is a regular user or author, allow them to see their own posts
+        if ($user->isUser() || $user->isAuthor()) {
             $posts = BlogModel::where('user_id', $user->id)->get(); // Non-admins can see only their posts
+        } else {
+            // Optional: Handle other roles or cases where no role matches
+            return redirect()->back()->with('error', 'You are not allowed to view this page.');
         }
 
         return view('show', compact('posts'));

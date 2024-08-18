@@ -11,6 +11,9 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        <!-- Hidden field to specify role -->
+                        <input type="hidden" name="role" value="{{ $role ?? 'user' }}">
+
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
 
@@ -41,16 +44,6 @@
                                 @enderror
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="role">Role</label>
-                            <select id="role" name="role" class="form-control" required>
-                                <option value="user" selected>User</option>
-                                <option value="author">Author</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-
 
                         <div class="row mb-3">
                             <label for="password"

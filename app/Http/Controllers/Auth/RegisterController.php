@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Redirect;
 
 class RegisterController extends Controller
 {
@@ -28,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -38,6 +41,18 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function showRegistrationForm(Request $request)
+    {
+        $role = 'user'; // Default role
+        return view('auth.register', compact('role'));
+    }
+
+    public function showAdminRegistrationForm(Request $request)
+    {
+        $role = 'admin'; // Admin role
+        return view('auth.register', compact('role'));
     }
 
     /**
@@ -52,7 +67,6 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string'],
         ]);
     }
 
@@ -66,11 +80,22 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
+        $role = request()->input('role', 'user'); // Default to 'user' if not specified
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => $data['role'],
+            'role' => $role,
         ]);
+    }
+
+    protected function registered(Request $request, $user): Response
+    {
+        if ($user->isAdmin()) {
+            return Redirect::route('admin.dashboard'); // Redirect to admin dashboard
+        }
+
+        return Redirect::intended($this->redirectPath()); // Default redirection
     }
 }

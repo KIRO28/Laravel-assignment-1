@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Auth\RegisterController;
 
 
+// for users and author
 
 Route::get('/', [BlogController::class, 'index'])->name('posts.index');
 Route::get('/create', [BlogController::class, 'create'])->name('posts.create');
@@ -17,9 +19,11 @@ Route::delete('/{id}/destroy', [BlogController::class, 'destroy'])->name('posts.
 
 
 Auth::routes();
+// Default registration route
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 
-// Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+// Admin registration route
+Route::get('admin/register', [RegisterController::class, 'showAdminRegistrationForm'])->name('admin.register');
 
 
 // Admin Routes
@@ -35,6 +39,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
     Route::put('users/{user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+    // Admin Blog Management Routes
+    Route::get('posts', [PostController::class, 'index'])->name('admin.posts.index');
+    Route::get('posts/create', [PostController::class, 'create'])->name('admin.posts.create');
+    Route::post('posts', [PostController::class, 'store'])->name('admin.posts.store');
+    Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
+    Route::put('posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
+    Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('admin.posts.destroy');
+});
+
+
+// author Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('dashboard', function () {
+        return view('layouts.admin');
+    })->name('admin.dashboard');
 
     // Admin Blog Management Routes
     Route::get('posts', [PostController::class, 'index'])->name('admin.posts.index');
