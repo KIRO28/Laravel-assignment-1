@@ -1,3 +1,6 @@
+Name: Kishor Karki 
+StudentId: 220279631
+
 Assignment 2: Laravel Blog Application
 Project Setup Instructions
 Follow these steps to set up the project with an empty database:
@@ -27,7 +30,6 @@ DB_PORT=27017
 DB_DATABASE=<your-database-name>
 DB_USERNAME=<your-username>
 DB_PASSWORD=<your-password>
-Generate Application Key
 
 
 6. Run Migrations to set up the database schema
@@ -42,15 +44,16 @@ Usage Instructions
 
 Navigate to http://localhost:8000/register to register a new user.
 For admin registration, use http://localhost:8000/admin/register.
-Logging In
+
+#Logging In
 
 2. Log in using the credentials you registered.
 Admins will have access to the admin panel at http://localhost:8000/admin/dashboard.
 Authors and user will have access to normal views
 
 3. Navigating the Admin Panel
-Admins can manage users and blog posts through the admin panel.
+Admins can manage all users and blog posts through the admin panel.
 
 4. logged in as author and users.
-you can create, delete edit or update the blog post. 
+you can create, delete edit or update the blog post you have created. 
 
