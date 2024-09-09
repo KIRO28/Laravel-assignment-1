@@ -19,14 +19,14 @@ class BlogController extends Controller
     }
 
 
-    public function detail($id)
-    {
-        try {
-            return response()->json(BlogModel::findOrFail($id));
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
+    // public function detail($id)
+    // {
+    //     try {
+    //         return response()->json(BlogModel::findOrFail($id));
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
 
 
 
