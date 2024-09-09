@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
     })
+    ->withRouting(
+        api: __DIR__ . '/../routes/api.php',
+        apiPrefix: 'api/',
+    )
+
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

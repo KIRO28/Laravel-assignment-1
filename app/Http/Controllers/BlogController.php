@@ -7,6 +7,30 @@ use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
+
+    // new functions 
+    public function page()
+    {
+        try {
+            return response()->json(BlogModel::all());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function detail($id)
+    {
+        try {
+            return response()->json(BlogModel::findOrFail($id));
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
     // Display the initial page (i.e., show page) with posts specific to the logged-in user.
     public function index()
     {
